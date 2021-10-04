@@ -5,10 +5,10 @@ from simsquarelib import heat_sim_square as sim
 
 FRAMERATE = 20
 N_SECONDS = 5
-RESOLUTION = 20
+RESOLUTION = 14
 MID_POINT = RESOLUTION // 2
-SQUARE_SIZE = 6
-SQUARE_SIZE_DARK = 4
+SQUARE_SIZE = 4
+SQUARE_SIZE_DARK = 3
 LS_BOUND = RESOLUTION // 2 - SQUARE_SIZE // 2
 US_BOUND = RESOLUTION // 2 + SQUARE_SIZE // 2 + (1 if SQUARE_SIZE &1 else 0)
 LS_BOUND_DARK = 2
@@ -21,11 +21,11 @@ COOL_MASK[LS_BOUND_DARK: US_BOUND_DARK, LS_BOUND_DARK: US_BOUND_DARK] = 1
 def animate_func(i):
     fluid_sim.apply_temperature_change(0.2, HEAT_MASK)
     fluid_sim.apply_temperature_change(-0.2, COOL_MASK)
-    fluid_sim.apply_diffusion_naive()
+    fluid_sim.sim_step()
     im.set_array(fluid_sim.temperatures)
     return [im]
 
-fluid_sim = sim(size = RESOLUTION, timestep = 1 / FRAMERATE, viscosity = 1, diffusion_factor = 0.5)
+fluid_sim = sim(size = RESOLUTION, timestep = 1 / FRAMERATE, viscosity = 1, diffusion_factor = 0.1, iterations = 1)
 fig, ax = plt.subplots(figsize=plt.figaspect(fluid_sim.temperatures))
 plt.tight_layout()
 plt.axis('off')
